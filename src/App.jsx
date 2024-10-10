@@ -75,7 +75,7 @@ function App() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {showDetails && <Details />}
+      {showDetails && <Details setDetailsVisbility={setDetailsVisbility} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
