@@ -1,16 +1,14 @@
 import Header from './Header.jsx'
 import Input from './Input.jsx'
 import TaskBoard from './TaskBoard.jsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
-import { data } from 'autoprefixer';
 
-console.log('App.jsx loaded');
 
 function App() {
   const [boardTasks, setBoardTasks] = useState({
-    1: [],
+    1: [{name: 'Your first task', note:'Notes go here'}],
   });
 
   const onDragEnd = (result) => {
@@ -71,7 +69,8 @@ function App() {
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
         {Object.keys(boardTasks).map((board, index) => (
-          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} />
+          <TaskBoard key={index} tasks={boardTasks[board]} boardId={board} deleteTask={deleteTask} />
+
         ))}
         <AddButton addBoard={addBoard}/>
       </div>
