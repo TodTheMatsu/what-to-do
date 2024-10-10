@@ -3,6 +3,8 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import TaskCard from './TaskCard.jsx';
 import './index.css';
 
+console.log('TaskBoard.jsx loaded');
+
 function TaskBoard({ tasks, boardId, deleteTask }) {
   return (
     <Droppable droppableId={`Board-${boardId}`} type='group'>
