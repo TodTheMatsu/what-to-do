@@ -6,6 +6,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
 import { data } from 'autoprefixer';
 
+console.log('App.jsx loaded');
 
 function App() {
   const [boardTasks, setBoardTasks] = useState({
