@@ -5,7 +5,7 @@ import './index.css';
 
 console.log('TaskBoard.jsx loaded');
 
-function TaskBoard({ tasks, boardId, deleteTask }) {
+function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility }) {
   return (
     <Droppable droppableId={`Board-${boardId}`} type='group'>
       {(provided) => (
@@ -23,7 +23,7 @@ function TaskBoard({ tasks, boardId, deleteTask }) {
                   {...provided.dragHandleProps}
                   className="draggable"
                 >
-                  <TaskCard text={task.name} provided={provided} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} />
+                  <TaskCard text={task.name} provided={provided} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} setDetailsVisbility={setDetailsVisbility} />
                 </div>
               )}
             </Draggable>

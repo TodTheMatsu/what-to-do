@@ -1,15 +1,19 @@
 import Header from './Header.jsx'
 import Input from './Input.jsx'
 import TaskBoard from './TaskBoard.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
-
+import Details from './Details.jsx';
 
 function App() {
   const [boardTasks, setBoardTasks] = useState({
-    1: [{name: 'Your first task', note:'Notes go here'}],
+    1: [{
+      name: 'Task 1',
+      note: 'Note 1'}],
   });
+
+  const [showDetails, setShowDetails] = useState(false);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -63,17 +67,24 @@ function App() {
       [newBoardId]: []
     });
   };
+
+  const setDetailsVisbility = () => {
+    console.log("setDetailsVisbility")
+    setShowDetails(!showDetails);
+  }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      {showDetails && <Details />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
         {Object.keys(boardTasks).map((board, index) => (
-          <TaskBoard key={index} tasks={boardTasks[board]} boardId={board} deleteTask={deleteTask} />
-
+          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} setDetailsVisbility={setDetailsVisbility}/>
         ))}
         <AddButton addBoard={addBoard}/>
       </div>
+       
     </DragDropContext>
   );
 }
