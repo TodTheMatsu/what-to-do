@@ -9,8 +9,8 @@ import Details from './Details.jsx';
 function App() {
   const [boardTasks, setBoardTasks] = useState({
     1: [{
-      name: 'Task 1',
-      note: 'Welcome to your first ever task!'}],
+      name: 'Your first task',
+      note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. Think of this task as your initiation into a more organized workflow. If at any point you have questions or need assistance, don’t hesitate to seek help or refer to the guidance provided. Our aim is to make your task management experience as smooth and efficient as possible. Dive in, experiment, and don’t be afraid to explore all the features available. Enjoy your journey to becoming a productivity master!'}],
   });
   const [showDetails, setShowDetails] = useState({
     show: false,
@@ -62,6 +62,19 @@ function App() {
     });
   };
 
+  const updateTask = (updatedTask) => {
+    const updatedBoardTasks = { ...boardTasks };
+    for (const boardId in updatedBoardTasks) {
+      const taskIndex = updatedBoardTasks[boardId].findIndex(task => task.name === showDetails.taskObj.name);
+      if (taskIndex !== -1) {
+        updatedBoardTasks[boardId][taskIndex] = updatedTask;
+        break;
+      }
+    }
+    setBoardTasks(updatedBoardTasks);
+    setShowDetails({ ...showDetails, taskObj: updatedTask });
+  };
+
   const addBoard = () => {
     const newBoardId = Object.keys(boardTasks).length + 1;
     setBoardTasks({
@@ -92,7 +105,7 @@ function App() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} />}
+       {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 

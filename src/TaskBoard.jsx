@@ -7,6 +7,7 @@ console.log('TaskBoard.jsx loaded');
 
 function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility }) {
   return (
+    <div>
     <Droppable droppableId={`Board-${boardId}`} type='group'>
       {(provided) => (
         <div
@@ -32,6 +33,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility }) {
         </div>
       )}
     </Droppable>
+    </div>
   );
 }
 

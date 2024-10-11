@@ -7,7 +7,7 @@ function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisbility })
             ref={provided.innerRef}
         >
             <div onClick={() => setDetailsVisbility(task, true)} className="w-full h-full cursor-pointer flex items-center justify-center">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center">{task.name}</h1>
+                <h1 className="text-3xl truncate font-bold tracking-tight text-gray-900 text-center">{task.name}</h1>
             </div>
             <div onClick={deleteTask}
                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full text-sm absolute -top-2 -right-2 border-2 border-red-700 cursor-pointer">
