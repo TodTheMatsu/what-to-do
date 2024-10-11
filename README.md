@@ -1,6 +1,7 @@
 # What to do?
 
-This is a simple to-do list project of mine, nothing too special, everything is WIP
+This is a simple to-do list project of mine, nothing too special, everything is WIP.
+Feel free to fork my project!!
 
 ## Installation
 
