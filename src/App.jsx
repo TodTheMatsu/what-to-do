@@ -62,6 +62,19 @@ function App() {
     });
   };
 
+  const updateTask = (updatedTask) => {
+    const updatedBoardTasks = { ...boardTasks };
+    for (const boardId in updatedBoardTasks) {
+      const taskIndex = updatedBoardTasks[boardId].findIndex(task => task.name === showDetails.taskObj.name);
+      if (taskIndex !== -1) {
+        updatedBoardTasks[boardId][taskIndex] = updatedTask;
+        break;
+      }
+    }
+    setBoardTasks(updatedBoardTasks);
+    setShowDetails({ ...showDetails, taskObj: updatedTask });
+  };
+
   const addBoard = () => {
     const newBoardId = Object.keys(boardTasks).length + 1;
     setBoardTasks({
@@ -92,7 +105,7 @@ function App() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} />}
+       {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
