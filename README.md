@@ -8,3 +8,8 @@ This is a simple to-do list project of mine, nothing too special, everything is 
    ```bash
    git clone https://github.com/TodTheMatsu/what-to-do.git
    ```
+
+2. Install the dependencies:
+```bash
+npm install
+```
