@@ -4,12 +4,17 @@ import TaskBoard from './TaskBoard.jsx'
 import { useEffect, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
-import { data } from 'autoprefixer';
-
+import Details from './Details.jsx';
 
 function App() {
   const [boardTasks, setBoardTasks] = useState({
-    1: [],
+    1: [{
+      name: 'Task 1',
+      note: 'Welcome to your first ever task!'}],
+  });
+  const [showDetails, setShowDetails] = useState({
+    show: false,
+    taskObj: null
   });
 
   const onDragEnd = (result) => {
@@ -64,16 +69,39 @@ function App() {
       [newBoardId]: []
     });
   };
+
+  const setDetailsVisbility = (taskObj,detailStatus) => {
+    
+    if (taskObj && detailStatus) {
+      console.log(taskObj,detailStatus);
+      setShowDetails({
+        show: true,
+        taskObj: taskObj
+      });
+      
+    }
+
+    if (!detailStatus) {
+      setShowDetails({
+        show: false,
+        taskObj: null
+      });
+    }
+
+  }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
         {Object.keys(boardTasks).map((board, index) => (
-          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} />
+          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} setDetailsVisbility={setDetailsVisbility}/>
         ))}
         <AddButton addBoard={addBoard}/>
       </div>
+       
     </DragDropContext>
   );
 }
