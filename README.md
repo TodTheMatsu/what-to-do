@@ -11,5 +11,5 @@ This is a simple to-do list project of mine, nothing too special, everything is 
 
 2. Install the dependencies:
 ```bash
-npm install
-```
+   npm install
+   ```
