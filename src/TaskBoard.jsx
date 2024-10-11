@@ -3,8 +3,11 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import TaskCard from './TaskCard.jsx';
 import './index.css';
 
-function TaskBoard({ tasks, boardId, deleteTask }) {
+console.log('TaskBoard.jsx loaded');
+
+function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility }) {
   return (
+    <div>
     <Droppable droppableId={`Board-${boardId}`} type='group'>
       {(provided) => (
         <div
@@ -21,7 +24,7 @@ function TaskBoard({ tasks, boardId, deleteTask }) {
                   {...provided.dragHandleProps}
                   className="draggable"
                 >
-                  <TaskCard text={task} provided={provided} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} />
+                  <TaskCard task={task} provided={provided} snapshot={snapshot} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} setDetailsVisbility={setDetailsVisbility} />
                 </div>
               )}
             </Draggable>
@@ -30,6 +33,7 @@ function TaskBoard({ tasks, boardId, deleteTask }) {
         </div>
       )}
     </Droppable>
+    </div>
   );
 }
 

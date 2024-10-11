@@ -7,21 +7,28 @@ function Input({ tasks, setTasks }) {
         setTaskText(e.target.value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!taskText) return;
+const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!taskText) return;
 
-        // Copy the existing tasks for board 1 and add the new task
-        const updatedBoardTasks = [...tasks[1], taskText];
-
-        // Update the boardTasks state with the new task for board 1
-        setTasks({
-            ...tasks,
-            1: updatedBoardTasks
-        });
-
-        setTaskText("");
+    // Create a new task object
+    const newTask = {
+        name: taskText,
+        note: "",
     };
+
+    // Copy the existing tasks for board 1 and add the new task
+    const updatedBoardTasks = [...tasks[1], newTask];
+
+    // Update the boardTasks state with the new task for board 1
+    setTasks({
+        ...tasks,
+        1: updatedBoardTasks
+    });
+
+    setTaskText("");
+};
+
 
     return (
         <div>

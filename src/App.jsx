@@ -4,13 +4,17 @@ import TaskBoard from './TaskBoard.jsx'
 import { useEffect, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
-import { data } from 'autoprefixer';
-
-console.log('suspense.js loaded');
+import Details from './Details.jsx';
 
 function App() {
   const [boardTasks, setBoardTasks] = useState({
-    1: [],
+    1: [{
+      name: 'Your first task',
+      note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. Think of this task as your initiation into a more organized workflow. If at any point you have questions or need assistance, don’t hesitate to seek help or refer to the guidance provided. Our aim is to make your task management experience as smooth and efficient as possible. Dive in, experiment, and don’t be afraid to explore all the features available. Enjoy your journey to becoming a productivity master!'}],
+  });
+  const [showDetails, setShowDetails] = useState({
+    show: false,
+    taskObj: null
   });
 
   const onDragEnd = (result) => {
@@ -58,6 +62,19 @@ function App() {
     });
   };
 
+  const updateTask = (updatedTask) => {
+    const updatedBoardTasks = { ...boardTasks };
+    for (const boardId in updatedBoardTasks) {
+      const taskIndex = updatedBoardTasks[boardId].findIndex(task => task.name === showDetails.taskObj.name);
+      if (taskIndex !== -1) {
+        updatedBoardTasks[boardId][taskIndex] = updatedTask;
+        break;
+      }
+    }
+    setBoardTasks(updatedBoardTasks);
+    setShowDetails({ ...showDetails, taskObj: updatedTask });
+  };
+
   const addBoard = () => {
     const newBoardId = Object.keys(boardTasks).length + 1;
     setBoardTasks({
@@ -65,16 +82,39 @@ function App() {
       [newBoardId]: []
     });
   };
+
+  const setDetailsVisbility = (taskObj,detailStatus) => {
+    
+    if (taskObj && detailStatus) {
+      console.log(taskObj,detailStatus);
+      setShowDetails({
+        show: true,
+        taskObj: taskObj
+      });
+      
+    }
+
+    if (!detailStatus) {
+      setShowDetails({
+        show: false,
+        taskObj: null
+      });
+    }
+
+  }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+       {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
         {Object.keys(boardTasks).map((board, index) => (
-          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} />
+          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} setDetailsVisbility={setDetailsVisbility}/>
         ))}
         <AddButton addBoard={addBoard}/>
       </div>
+       
     </DragDropContext>
   );
 }
