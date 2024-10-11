@@ -23,7 +23,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility }) {
                   {...provided.dragHandleProps}
                   className="draggable"
                 >
-                  <TaskCard text={task.name} provided={provided} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} setDetailsVisbility={setDetailsVisbility} />
+                  <TaskCard task={task} provided={provided} snapshot={snapshot} isDragging={snapshot.isDragging} deleteTask={() => deleteTask(boardId, index)} setDetailsVisbility={setDetailsVisbility} />
                 </div>
               )}
             </Draggable>

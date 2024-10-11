@@ -10,10 +10,12 @@ function App() {
   const [boardTasks, setBoardTasks] = useState({
     1: [{
       name: 'Task 1',
-      note: 'Note 1'}],
+      note: 'Welcome to your first ever task!'}],
   });
-
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState({
+    show: false,
+    taskObj: null
+  });
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -68,14 +70,29 @@ function App() {
     });
   };
 
-  const setDetailsVisbility = () => {
-    console.log("setDetailsVisbility")
-    setShowDetails(!showDetails);
+  const setDetailsVisbility = (taskObj,detailStatus) => {
+    
+    if (taskObj && detailStatus) {
+      console.log(taskObj,detailStatus);
+      setShowDetails({
+        show: true,
+        taskObj: taskObj
+      });
+      
+    }
+
+    if (!detailStatus) {
+      setShowDetails({
+        show: false,
+        taskObj: null
+      });
+    }
+
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {showDetails && <Details setDetailsVisbility={setDetailsVisbility} />}
+      {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} />}
       <Header />
       <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
