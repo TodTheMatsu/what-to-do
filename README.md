@@ -6,5 +6,5 @@ This is a simple to-do list project of mine, nothing too special, everything is 
 
 1. Clone the repository:
    ```bash
-   git clone [invalid URL removed]
+   git clone https://github.com/TodTheMatsu/what-to-do.git
    ```
