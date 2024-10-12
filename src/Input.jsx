@@ -17,6 +17,7 @@ const handleSubmit = (e) => {
         note: "",
     };
 
+    console.log(tasks);
     // Copy the existing tasks for board 1 and add the new task
     const updatedBoardTasks = [...tasks[1], newTask];
 

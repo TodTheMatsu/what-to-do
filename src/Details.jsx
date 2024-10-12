@@ -36,7 +36,7 @@ function Details({ setDetailsVisbility, taskObj, updateTask }) {
                 {taskObj && (
                     <>
                         <input
-                            className="z-20 w-[550px] text-3xl font-bold tracking-tight bg-transparent text-gray-900 text-left mx-10 my-5"
+                            className="z-20 w-[550px] text-3xl font-bold tracking-tight bg-transparent text-gray-900 text-left mx-10 my-5 focus:outline-none focus:bg-gray-200 hover:bg-gray-200"
                             value={taskObj.name}
                             onChange={handleInputChange}
                             placeholder='Enter a task...'
@@ -44,7 +44,7 @@ function Details({ setDetailsVisbility, taskObj, updateTask }) {
                         <div className="z-20 overflow-auto max-h-[85%] bg-slate-200 rounded-sm mx-5 shadow-2xl">
                             <textarea
                                 ref={textareaRef} // Attach ref to textarea
-                                className="w-full p-5 text-xl tracking-tight font-sans text-gray-900 bg-transparent resize-none" // Disable manual resizing
+                                className="w-full p-5 focus:outline-none text-xl tracking-tight font-sans text-gray-900 bg-transparent resize-none" // Disable manual resizing
                                 value={taskObj.note}
                                 onChange={handleTextareaChange}
                                 style={{ overflow: 'hidden' }} // Prevent scrollbars

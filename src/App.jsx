@@ -107,10 +107,9 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
        {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
-      <Input tasks={boardTasks} setTasks={setBoardTasks} />
       <div className='flex'> 
         {Object.keys(boardTasks).map((board, index) => (
-          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} setDetailsVisbility={setDetailsVisbility}/>
+          <TaskBoard key={index} tasks={boardTasks[board]} boardId={[board]} deleteTask={deleteTask} setDetailsVisbility={setDetailsVisbility} setTasks={setBoardTasks} boards={boardTasks} />
         ))}
         <AddButton addBoard={addBoard}/>
       </div>
