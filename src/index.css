@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-.draggable{
+/* Custom draggable class */
+.draggable {
     transform: none !important;
+}
+
+.cursor {
+    display: inline-block; /* Ensure it acts like text */
+}
+
+.blinking {
+    animation: blink 0.8s step-end infinite; /* Blinking animation only if this class is applied */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0; /* Make it invisible halfway */
+    }
 }
