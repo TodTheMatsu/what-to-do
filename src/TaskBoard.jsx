@@ -5,7 +5,7 @@ import './index.css';
 
 console.log('TaskBoard.jsx loaded');
 
-function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, boards, isDragging}) {
+function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, boards, isDragging, deleteBoard }) {
   const [taskText, setTaskText] = useState("");
 
   const handleInputChange = (e) => {
@@ -37,11 +37,13 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, 
     <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2' : ''}`}>
       <Droppable droppableId={`Board-${boardId}`} type='group'>
         {(provided) => (
+          
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 mx-2 border-4 border-gray-300 bg-gray-200 shadow-2xl pt-10 px-3 rounded-lg"
+            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 mx-2 border-4 border-gray-300 bg-gray-200 shadow-2xl pt-10 px-3 rounded-lg relative"
           >
+            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 bg-gray-200  text-gray-900 font-bold  rounded-full top-0 right-0 absolute'>X</button>
             {tasks && tasks.map((task, index) => (
               <Draggable key={index} draggableId={`draggable-${boardId}-${index}`} index={index}>
                 {(provided, snapshot) => (

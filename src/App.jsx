@@ -69,6 +69,27 @@ function App() {
     });
   };
 
+  const deleteBoard = (boardId) => {
+    // Get the index of the board in boardOrder
+    const boardIndex = boardOrder.indexOf(boardId);
+  
+    // Check if the board exists
+    if (boardIndex === -1) return;
+  
+    // Remove the board from the boardOrder array
+    const updatedBoardOrder = [...boardOrder];
+    updatedBoardOrder.splice(boardIndex, 1);
+  
+    // Remove the board from boardTasks
+    const updatedBoardTasks = { ...boardTasks };
+    delete updatedBoardTasks[boardId];
+  
+    // Update state
+    setBoardOrder(updatedBoardOrder);
+    setBoardTasks(updatedBoardTasks);
+  };
+  
+
   const updateTask = (updatedTask) => {
     const updatedBoardTasks = { ...boardTasks };
     for (const boardId in updatedBoardTasks) {
@@ -124,6 +145,7 @@ function App() {
                      setDetailsVisbility={setDetailsVisbility}
                      setTasks={setBoardTasks}
                      boards={boardTasks}
+                     deleteBoard={deleteBoard}
                      isDragging={snapshot.isDragging} // Make sure this prop is being passed here
                    />
                  </div>
