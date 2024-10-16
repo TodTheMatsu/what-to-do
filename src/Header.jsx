@@ -60,8 +60,8 @@ function Header() {
     }, [displayText, isDeleting, index, phrases, typingSpeed, pauseDuration]);
 
     return (
-        <header className="bg-white shadow-lg min-h-24">
-            <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <header className="bg-white shadow-lg min-h-24 fixed w-full z-10">
+            <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center ">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center mr-2 outline-dashed rounded-2xl px-2 py-2">
                     {displayText}
                     <span className={`cursor ${isBlinking ? 'blinking' : ''}`}>|</span> {/* Cursor element with conditional class */}

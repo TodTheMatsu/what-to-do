@@ -11,7 +11,7 @@ function App() {
   const [boardTasks, setBoardTasks] = useState({
     1: [{
       name: 'Click on me!',
-      note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed.'
+      note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. You can press enter after typing in the task name in the input field to create a new task.',
     }],
   });
   const [showDetails, setShowDetails] = useState({
@@ -130,35 +130,36 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
-      <Droppable droppableId="board-container" direction="horizontal" type='board'>
-        {(provided) => (
-          <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>
-            {boardOrder.map((boardId, index) => (
-             <Draggable key={boardId} draggableId={`board-${boardId}`} index={index}>
-             {(provided, snapshot) => (
-               <div ref={provided.innerRef} {...provided.draggableProps} className="mx-2">
-                 <div {...provided.dragHandleProps}>
-                   <TaskBoard
-                     tasks={boardTasks[boardId]}
-                     boardId={boardId}
-                     deleteTask={deleteTask}
-                     setDetailsVisbility={setDetailsVisbility}
-                     setTasks={setBoardTasks}
-                     boards={boardTasks}
-                     deleteBoard={deleteBoard}
-                     isDragging={snapshot.isDragging} // Make sure this prop is being passed here
-                   />
-                 </div>
-               </div>
-             )}
-           </Draggable>
-           
-            ))}
-            {provided.placeholder}
-            <AddButton addBoard={addBoard} />
-          </div>
-        )}
-      </Droppable>
+      <div className="pt-24"> {/* Added padding-top to accommodate fixed header */}
+        <Droppable droppableId="board-container" direction="horizontal" type='board'>
+          {(provided) => (
+            <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>
+              {boardOrder.map((boardId, index) => (
+                <Draggable key={boardId} draggableId={`board-${boardId}`} index={index}>
+                  {(provided, snapshot) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps} className="mx-2">
+                      <div {...provided.dragHandleProps}>
+                        <TaskBoard
+                          tasks={boardTasks[boardId]}
+                          boardId={boardId}
+                          deleteTask={deleteTask}
+                          setDetailsVisbility={setDetailsVisbility}
+                          setTasks={setBoardTasks}
+                          boards={boardTasks}
+                          deleteBoard={deleteBoard}
+                          isDragging={snapshot.isDragging}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              <AddButton addBoard={addBoard} />
+            </div>
+          )}
+        </Droppable>
+      </div>
     </DragDropContext>
   );
 }
