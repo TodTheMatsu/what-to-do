@@ -41,7 +41,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, 
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 mx-2 border-4 border-gray-300 bg-gray-200 shadow-2xl pt-10 px-3 rounded-lg relative"
+            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 border-4 border-gray-300 bg-gray-200 shadow-2xl pt-10 px-3 rounded-lg relative"
           >
             <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 bg-gray-200  text-gray-900 font-bold  rounded-full top-0 right-0 absolute'>X</button>
             {tasks && tasks.map((task, index) => (

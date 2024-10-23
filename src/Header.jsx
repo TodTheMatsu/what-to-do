@@ -67,6 +67,10 @@ function Header() {
                     <span className={`cursor ${isBlinking ? 'blinking' : ''}`}>|</span> {/* Cursor element with conditional class */}
                 </h1>
             </div>
+            <button className='bg-gray-100 text-black p-2 rounded-lg shadow-xl border-2 fixed top-7  right-4'
+            onClick={() => window.location.href='/what-to-do/login/'}>Sign in</button>
+            <button className='bg-gray-100 text-black p-2 rounded-lg shadow-xl border-2 fixed top-7 right-24' 
+        onClick={() => window.location.href='/what-to-do/signup/'}>Sign up</button>
         </header>
     );
 }
