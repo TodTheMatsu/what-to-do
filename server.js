@@ -28,16 +28,22 @@ const User = mongoose.model('User', signupSchema);
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body; 
 
-  const newUser = new User({ email, password });
-
   try {
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+      // Check if the email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+          return res.status(400).json({ error: 'Email already in use' });
+      }
+
+      const newUser = new User({ email, password });
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
   } catch (error) {
-    console.error('Error saving user:', error);
-    res.status(500).json({ error: 'Internal server error' });
+      console.error('Error saving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;

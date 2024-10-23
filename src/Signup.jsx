@@ -13,6 +13,20 @@ function Signup() {
         setLoading(true);
         setError('');
 
+        // Simple email validation
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            setError('Please enter a valid email address.');
+            setLoading(false);
+            return;
+        }
+
+        // Simple password validation
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters long.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/signup`, {
                 method: 'POST',
@@ -29,6 +43,8 @@ function Signup() {
 
             const data = await response.json();
             console.log('Signup successful:', data);
+            setEmail(''); // Reset email field
+            setPassword(''); // Reset password field
             navigate('/what-to-do/'); // Redirect to dashboard or another route
         } catch (error) {
             setError(error.message);
@@ -64,7 +80,9 @@ function Signup() {
                         className={`w-[300px] h-[50px] rounded-md border-2 mt-5 ${loading ? 'bg-gray-400' : 'bg-gray-900'} text-white font-bold hover:bg-gray-700`}
                         disabled={loading}
                     >
-                        {loading ? 'Signing up...' : 'Sign up'}
+                        {loading ? (
+                            <span>Signing up...</span> // You could replace this with a spinner
+                        ) : 'Sign up'}
                     </button>
                 </form>
                 <Link to="/what-to-do/" className="text-center text-gray-400 underline"><p>Continue as guest</p></Link>
