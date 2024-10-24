@@ -20,3 +20,11 @@ https://todthematsu.github.io/what-to-do/
    ```bash
    npm install
    ```
+## Setup
+1. Remember to set up the .env file in order for the the whole thing to work
+   ```
+   MONGODB_URI=<your mongodb URI>
+   VITE_API_URL=http://localhost:5000
+   JWT_SECRET=<put your JWT secret here>
+   PORT=5000
+   ```
