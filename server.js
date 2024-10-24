@@ -22,8 +22,6 @@ const signupSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-const User = mongoose.model('User', signupSchema);
-
 const taskSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
@@ -31,8 +29,15 @@ const taskSchema = new mongoose.Schema({
   completed: { type: Boolean, default: false },
 }, { timestamps: true });
 
-const Task = mongoose.model('Task', taskSchema);
+const boardSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  boardOrder: { type: [Number], required: true },
+  boardTasks: { type: Object, required: true }, // Store tasks as an object
+});
 
+const Task = mongoose.model('Task', taskSchema);
+const Board = mongoose.model('Board', boardSchema);
+const User = mongoose.model('User', signupSchema);
 
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Assuming Bearer token
@@ -108,6 +113,53 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Route to save boards and tasks
+app.post('/save-boards', authenticate, async (req, res) => {
+  const { boardOrder, boardTasks } = req.body;
+  const userId = req.user.id;
+
+  try {
+    // Assuming you have a Board model that references the User model
+    const existingBoard = await Board.findOne({ userId });
+
+    if (existingBoard) {
+      // Update existing boards
+      existingBoard.boardOrder = boardOrder;
+      existingBoard.boardTasks = boardTasks;
+      await existingBoard.save();
+    } else {
+      // Create a new board entry
+      const newBoard = new Board({
+        userId,
+        boardOrder,
+        boardTasks,
+      });
+      await newBoard.save();
+    }
+
+    res.status(200).json({ message: 'Boards saved successfully' });
+  } catch (error) {
+    console.error('Error saving boards:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route to retrieve boards and tasks
+app.get('/get-boards', authenticate, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const existingBoard = await Board.findOne({ userId });
+    if (existingBoard) {
+      res.status(200).json(existingBoard);
+    } else {
+      res.status(404).json({ message: 'No boards found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving boards:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 // Start the server
