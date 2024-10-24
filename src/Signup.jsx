@@ -43,6 +43,7 @@ function Signup() {
 
             const data = await response.json();
             console.log('Signup successful:', data);
+            localStorage.setItem('token', data.token);
             setEmail(''); // Reset email field
             setPassword(''); // Reset password field
             navigate('/what-to-do/'); // Redirect to dashboard or another route

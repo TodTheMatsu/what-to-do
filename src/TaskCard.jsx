@@ -1,4 +1,4 @@
-function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisbility }) {
+function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisibility }) {
     return (
         <div
             className={`w-full z-0 h-20 my-2 ${snapshot.isDragging ? 'animate-pulse outline-dashed outline-2' : ''} bg-gray-100 shadow-2xl border-2 border-gray-400 rounded-md flex items-center justify-center flex-col relative hover:border-gray-900`}
@@ -6,7 +6,7 @@ function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisbility })
             {...provided.draggableProps}
             ref={provided.innerRef}
         >
-            <div onClick={() => setDetailsVisbility(task, true)} className="w-full h-full cursor-pointer flex items-center justify-center">
+            <div onClick={() => setDetailsVisibility(task, true)} className="w-full h-full cursor-pointer flex items-center justify-center">
                 <h1 className="text-3xl select-none truncate font-bold tracking-tight text-gray-900 text-center">{task.name}</h1>
             </div>
             <div onClick={deleteTask}
