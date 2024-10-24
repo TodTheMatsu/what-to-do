@@ -5,7 +5,7 @@ import './index.css';
 
 console.log('TaskBoard.jsx loaded');
 
-function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, boards, isDragging, deleteBoard }) {
+function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks, boards, isDragging, deleteBoard }) {
   const [taskText, setTaskText] = useState("");
 
   const handleInputChange = (e) => {
@@ -59,7 +59,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisbility, setTasks, 
                       snapshot={snapshot} 
                       isDragging={snapshot.isDragging} 
                       deleteTask={() => deleteTask(boardId, index)} 
-                      setDetailsVisbility={setDetailsVisbility} 
+                      setDetailsVisibility={setDetailsVisibility} 
                     />
                   </div>
                 )}

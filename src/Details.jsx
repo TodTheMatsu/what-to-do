@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-function Details({ setDetailsVisbility, taskObj, updateTask }) {
+function Details({ setDetailsVisibility, taskObj, updateTask }) {
     const textareaRef = useRef(null); // Create a ref for the textarea
 
     const handleInputChange = (e) => {
@@ -29,7 +29,7 @@ function Details({ setDetailsVisbility, taskObj, updateTask }) {
     return (
         <>
             <div
-                onClick={() => setDetailsVisbility(null, false)}
+                onClick={() => setDetailsVisibility(null, false)}
                 className="z-20 w-full h-screen bg-black bg-opacity-80 pointer-events-auto absolute"
             ></div>
             <div className="z-30 w-[600px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 h-4/6 rounded-lg shadow-lg border-8 border-gray-300 bg-gradient-to-br from-gray-100 to-gray-200 shadow-gray-500">

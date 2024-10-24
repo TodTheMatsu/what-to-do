@@ -22,20 +22,11 @@ const signupSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-const taskSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  title: { type: String, required: true },
-  description: { type: String },
-  completed: { type: Boolean, default: false },
-}, { timestamps: true });
-
 const boardSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   boardOrder: { type: [Number], required: true },
-  boardTasks: { type: Object, required: true }, // Store tasks as an object
+  boardTasks: { type: Object, required: false }, // Store tasks as an object
 });
-
-const Task = mongoose.model('Task', taskSchema);
 const Board = mongoose.model('Board', boardSchema);
 const User = mongoose.model('User', signupSchema);
 
@@ -55,7 +46,6 @@ const authenticate = (req, res, next) => {
   }
 };
 
-// Route to add a new user
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body; 
 
@@ -68,28 +58,17 @@ app.post('/signup', async (req, res) => {
 
       const newUser = new User({ email, password });
       const savedUser = await newUser.save();
-      res.status(201).json(savedUser);
+      
+      // Generate JWT
+      const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+      // Return user data and token
+      res.status(201).json({ user: savedUser, token });
   } catch (error) {
       console.error('Error saving user:', error);
       res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
-app.post('/tasks',authenticate, async (req, res) => {
-  const { title, description } = req.body;
-  const userId = req.user.id; // Assuming you set req.user in your authentication middleware
-
-  try {
-    const newTask = new Task({ userId, title, description });
-    const savedTask = await newTask.save();
-    res.status(201).json(savedTask);
-  } catch (error) {
-    console.error('Error saving task:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -136,28 +115,41 @@ app.post('/save-boards', authenticate, async (req, res) => {
       });
       await newBoard.save();
     }
-
+    console.log('Board saved successfully');
     res.status(200).json({ message: 'Boards saved successfully' });
   } catch (error) {
     console.error('Error saving boards:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 // Route to retrieve boards and tasks
 app.get('/get-boards', authenticate, async (req, res) => {
   const userId = req.user.id;
 
   try {
     const existingBoard = await Board.findOne({ userId });
+    console.log('Existing Board:', existingBoard); // Log the found board
     if (existingBoard) {
-      res.status(200).json(existingBoard);
+      return res.status(200).json(existingBoard);
     } else {
-      res.status(404).json({ message: 'No boards found' });
+      // If no boards are found, create a new board for the user
+      const newBoard = new Board({
+        userId,
+        boardOrder: [1], // Initialize with an empty board order
+        boardTasks: {
+          1: [{
+            name: 'Click on me!',
+            note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. You can press enter after typing in the task name in the input field to create a new task.',
+          }],
+        }, // Initialize with an empty board tasks object
+      });
+      await newBoard.save(); // Save the new board to the database
+      console.log('New board created for user ID:', userId); // Log the creation of the new board
+      return res.status(201).json(newBoard); // Return the newly created board
     }
   } catch (error) {
     console.error('Error retrieving boards:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 

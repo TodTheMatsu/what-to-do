@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 function Header() {
     const phrases = [
         "what",
@@ -23,7 +23,7 @@ function Header() {
         "What to create?",
         "What to experience?"
     ];
-    
+    const navigate = useNavigate();
     const [displayText, setDisplayText] = useState('');
     const [index, setIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -66,8 +66,9 @@ function Header() {
     }, [displayText, isDeleting, index, phrases, typingSpeed, pauseDuration]);
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Clear token from local storage
-        setIsLoggedIn(false); // Update login status
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        window.location.reload();
     };
     
 

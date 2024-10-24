@@ -15,10 +15,9 @@ function App() {
       note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. You can press enter after typing in the task name in the input field to create a new task.',
     }],
   });
-  const [showDetails, setShowDetails] = useState({
-    show: false,
-    taskObj: null
-  });
+  const [showDetails, setShowDetails] = useState({ show: false, taskObj: null });
+  const [isDataFetched, setIsDataFetched] = useState(false); // Track if data has been fetched
+  const [isSaving, setIsSaving] = useState(false); // Track if data is being saved
 
   useEffect(() => {
     const fetchBoards = async () => {
@@ -27,43 +26,47 @@ function App() {
 
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get-boards`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data) {
           setBoardOrder(response.data.boardOrder);
           setBoardTasks(response.data.boardTasks);
+          setIsDataFetched(true); // Set flag to indicate data has been fetched
         }
       } catch (error) {
         console.error('Error fetching boards:', error);
       }
     };
-  
+
     fetchBoards();
   }, []);
 
   const saveBoards = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return; // Return early if not logged in
+    if (isSaving || !isDataFetched) return; // Prevent saving if already saving or data not fetched
 
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    setIsSaving(true); // Set saving flag
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/save-boards`, {
         boardOrder,
         boardTasks,
       }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
       console.error('Error saving boards:', error);
+    } finally {
+      setIsSaving(false); // Reset saving flag
     }
   };
-  
+
   useEffect(() => {
-    saveBoards();
-  }, [boardOrder, boardTasks]);
+    if (isDataFetched) {
+      saveBoards(); // Call save only if data has been fetched
+    }
+  }, [boardOrder, boardTasks, isDataFetched]);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -107,20 +110,20 @@ function App() {
     updatedTasks.splice(index, 1);
     setBoardTasks({
       ...boardTasks,
-      [boardId]: updatedTasks
+      [boardId]: updatedTasks,
     });
   };
 
   const deleteBoard = (boardId) => {
     const boardIndex = boardOrder.indexOf(boardId);
     if (boardIndex === -1) return;
-  
+
     const updatedBoardOrder = [...boardOrder];
     updatedBoardOrder.splice(boardIndex, 1);
-  
+
     const updatedBoardTasks = { ...boardTasks };
     delete updatedBoardTasks[boardId];
-  
+
     setBoardOrder(updatedBoardOrder);
     setBoardTasks(updatedBoardTasks);
   };
@@ -142,28 +145,28 @@ function App() {
     const newBoardId = Object.keys(boardTasks).length + 1;
     setBoardTasks({
       ...boardTasks,
-      [newBoardId]: []
+      [newBoardId]: [],
     });
     setBoardOrder([...boardOrder, newBoardId]);
   };
 
-  const setDetailsVisbility = (taskObj, detailStatus) => {
+  const setDetailsVisibility = (taskObj, detailStatus) => {
     if (taskObj && detailStatus) {
       setShowDetails({
         show: true,
-        taskObj: taskObj
+        taskObj: taskObj,
       });
     } else {
       setShowDetails({
         show: false,
-        taskObj: null
+        taskObj: null,
       });
     }
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
+      {showDetails.show && <Details setDetailsVisibility={setDetailsVisibility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
       <div className="pt-24">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
@@ -178,7 +181,7 @@ function App() {
                           tasks={boardTasks[boardId]}
                           boardId={boardId}
                           deleteTask={deleteTask}
-                          setDetailsVisbility={setDetailsVisbility}
+                          setDetailsVisibility={setDetailsVisibility}
                           setTasks={setBoardTasks}
                           boards={boardTasks}
                           deleteBoard={deleteBoard}
