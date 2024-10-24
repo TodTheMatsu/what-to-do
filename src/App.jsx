@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
 import Details from './Details.jsx';
+import axios from 'axios';
 
 function App() {
-  const [boardOrder, setBoardOrder] = useState([1]); // Keeps track of the order of boards
+  const [boardOrder, setBoardOrder] = useState([1]);
   const [boardTasks, setBoardTasks] = useState({
     1: [{
       name: 'Click on me!',
@@ -19,11 +20,55 @@ function App() {
     taskObj: null
   });
 
+  useEffect(() => {
+    const fetchBoards = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return; // Return early if not logged in
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/get-boards`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.data) {
+          setBoardOrder(response.data.boardOrder);
+          setBoardTasks(response.data.boardTasks);
+        }
+      } catch (error) {
+        console.error('Error fetching boards:', error);
+      }
+    };
+  
+    fetchBoards();
+  }, []);
+
+  const saveBoards = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return; // Return early if not logged in
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/save-boards`, {
+        boardOrder,
+        boardTasks,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error('Error saving boards:', error);
+    }
+  };
+  
+  useEffect(() => {
+    saveBoards();
+  }, [boardOrder, boardTasks]);
+
   const onDragEnd = (result) => {
     if (!result.destination) return;
     const { source, destination, type } = result;
 
-    // Handle dragging of boards
     if (type === 'board') {
       const newBoardOrder = Array.from(boardOrder);
       const [movedBoardId] = newBoardOrder.splice(source.index, 1);
@@ -32,7 +77,6 @@ function App() {
       return;
     }
 
-    // Handle dragging of tasks
     const sourceBoardId = source.droppableId.split('-')[1];
     const destinationBoardId = destination.droppableId.split('-')[1];
     const sourceBoardTasks = Array.from(boardTasks[sourceBoardId]);
@@ -40,14 +84,12 @@ function App() {
     let updatedBoardTasks;
 
     if (sourceBoardId === destinationBoardId) {
-      // Moving within the same board
       sourceBoardTasks.splice(destination.index, 0, movedTask);
       updatedBoardTasks = {
         ...boardTasks,
         [sourceBoardId]: sourceBoardTasks,
       };
     } else {
-      // Moving to a different board
       const destinationBoardTasks = Array.from(boardTasks[destinationBoardId]);
       destinationBoardTasks.splice(destination.index, 0, movedTask);
       updatedBoardTasks = {
@@ -70,25 +112,18 @@ function App() {
   };
 
   const deleteBoard = (boardId) => {
-    // Get the index of the board in boardOrder
     const boardIndex = boardOrder.indexOf(boardId);
-  
-    // Check if the board exists
     if (boardIndex === -1) return;
   
-    // Remove the board from the boardOrder array
     const updatedBoardOrder = [...boardOrder];
     updatedBoardOrder.splice(boardIndex, 1);
   
-    // Remove the board from boardTasks
     const updatedBoardTasks = { ...boardTasks };
     delete updatedBoardTasks[boardId];
   
-    // Update state
     setBoardOrder(updatedBoardOrder);
     setBoardTasks(updatedBoardTasks);
   };
-  
 
   const updateTask = (updatedTask) => {
     const updatedBoardTasks = { ...boardTasks };
@@ -130,7 +165,7 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisbility={setDetailsVisbility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header />
-      <div className="pt-24"> {/* Added padding-top to accommodate fixed header */}
+      <div className="pt-24">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
           {(provided) => (
             <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>
