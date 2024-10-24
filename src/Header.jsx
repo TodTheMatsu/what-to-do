@@ -29,7 +29,13 @@ function Header() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(200);
     const [pauseDuration, setPauseDuration] = useState(2000);
-    const [isBlinking, setIsBlinking] = useState(false); // New state for blinking
+    const [isBlinking, setIsBlinking] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
+
+    useEffect(() => {
+        const token = localStorage.getItem('token'); // Check for token in local storage
+        setIsLoggedIn(!!token); // Set logged-in status based on token presence
+    }, []);
 
     useEffect(() => {
         const handleTyping = () => {
@@ -41,11 +47,11 @@ function Header() {
             setDisplayText(updatedText);
             
             if (!isDeleting && updatedText === currentPhrase) {
-                setIsBlinking(true); // Start blinking after typing is done
+                setIsBlinking(true);
                 setIsDeleting(true);
                 setTypingSpeed(pauseDuration);
             } else if (isDeleting && updatedText === '') {
-                setIsBlinking(false); // Stop blinking when deleting starts
+                setIsBlinking(false);
                 setIsDeleting(false);
                 setIndex((prevIndex) => (prevIndex + 1) % phrases.length);
                 setTypingSpeed(200);
@@ -59,20 +65,45 @@ function Header() {
         return () => clearTimeout(timer);
     }, [displayText, isDeleting, index, phrases, typingSpeed, pauseDuration]);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Clear token from local storage
+        setIsLoggedIn(false); // Update login status
+    };
+    
+
+
     return (
         <header className="bg-white shadow-lg min-h-24 fixed w-full z-10">
-            <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center ">
+            <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center mr-2 outline-dashed rounded-2xl px-2 py-2">
                     {displayText}
-                    <span className={`cursor ${isBlinking ? 'blinking' : ''}`}>|</span> {/* Cursor element with conditional class */}
+                    <span className={`cursor ${isBlinking ? 'blinking' : ''}`}>|</span>
                 </h1>
             </div>
-            <button className='bg-gray-100 text-black p-2 rounded-full shadow-xl border-2 fixed top-7  right-4'
-            onClick={() => window.location.href='/what-to-do/login/'}>Sign in</button>
-            <button className='bg-gray-900 text-white p-2 rounded-full shadow-xl border-2 fixed top-7 right-24' 
-        onClick={() => window.location.href='/what-to-do/signup/'}>Sign up</button>
+            {!isLoggedIn && ( // Render buttons only if user is not logged in
+                <>
+                    <button 
+                        className='bg-gray-100 text-black p-2 rounded-full shadow-xl border-2 fixed top-7 right-4'
+                        onClick={() => window.location.href='/what-to-do/login/'}>
+                        Sign in
+                    </button>
+                    <button 
+                        className='bg-gray-900 text-white p-2 rounded-full shadow-xl border-2 fixed top-7 right-24' 
+                        onClick={() => window.location.href='/what-to-do/signup/'}>
+                        Sign up
+                    </button>
+                </>
+            )}
+            {isLoggedIn && ( // Render logout button only if user is logged in
+                <button 
+                    className='bg-red-500 text-white p-2 rounded-full shadow-xl border-2 fixed top-7 right-4' 
+                    onClick={handleLogout}>
+                    Log out
+                </button>
+            )}
+
         </header>
     );
-}
+} 
 
 export default Header;
