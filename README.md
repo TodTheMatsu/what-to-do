@@ -9,6 +9,8 @@ Feel free to fork my project!!
 You can test out the site here:
 https://todthematsu.github.io/what-to-do/
 
+The scalability of this project is no
+
 ## Installation
 
 1. Clone the repository:
