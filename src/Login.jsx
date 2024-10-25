@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
@@ -6,7 +6,13 @@ function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+    useEffect(() => {
+        // Retrieve dark mode setting from localStorage on component mount
+        const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
+        if (savedDarkMode) {
+          document.documentElement.classList.add('dark'); // Apply dark mode class if saved
+        }
+      }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -35,16 +41,16 @@ function Login() {
     };
 
     return (
-        <div className="h-screen flex items-center justify-center"> 
-            <div className="w-[400px] h-[400px] bg-gray-100 shadow-2xl border-2 border-gray-400 rounded-md">
-                <h1 className="text-3xl font-bold select-none tracking-tight text-gray-900 text-center">Sign in</h1>
-                {error && <p className="text-red-500 text-center">{error}</p>}
+        <div className="h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900"> 
+            <div className="w-[400px] h-[400px] bg-white dark:bg-gray-800 shadow-2xl border-2 border-gray-400 rounded-md">
+                <h1 className="text-3xl font-bold select-none tracking-tight text-gray-900 dark:text-gray-100 text-center">Sign in</h1>
+                {error && <p className="text-red-500 dark:text-red-400 text-center">{error}</p>}
                 <form className="flex flex-col items-center justify-center h-[250px]" onSubmit={handleSubmit}>
                     <input 
                         placeholder="Email address" 
                         type="email" 
                         required 
-                        className="w-[300px] h-[50px] rounded-md border-2 mt-5" 
+                        className="w-[300px] h-[50px] rounded-md border-2 mt-5 dark:border-gray-700 dark:bg-gray-700 dark:text-white" 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -52,16 +58,17 @@ function Login() {
                         placeholder="Password" 
                         type="password" 
                         required 
-                        className="w-[300px] h-[50px] rounded-md border-2 mt-5" 
+                        className="w-[300px] h-[50px] rounded-md border-2 mt-5 dark:border-gray-700 dark:bg-gray-700 dark:text-white" 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button className="w-[300px] h-[50px] rounded-md border-2 mt-5 bg-gray-900 text-white font-bold hover:bg-gray-700">Login</button>
+                    <button className="w-[300px] h-[50px] rounded-md border-2 mt-5 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-300 font-bold hover:bg-gray-700 dark:hover:bg-gray-600">Login</button>
                 </form>
-                <Link to="/what-to-do/" className="text-center text-gray-400 underline"><p>Continue as guest</p></Link>
+                <Link to="/what-to-do/" className="text-center text-gray-400 dark:text-gray-500 underline"><p>Continue as guest</p></Link>
             </div>
         </div>
     );
 }
 
 export default Login;
+

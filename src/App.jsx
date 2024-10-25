@@ -19,11 +19,21 @@ function App() {
   const [showDetails, setShowDetails] = useState({ show: false, taskObj: null });
   const [isDataFetched, setIsDataFetched] = useState(false); // Track if data has been fetched
   const [isSaving, setIsSaving] = useState(false); // Track if data is being saved
-  
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark', !darkMode);
-};
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode)); // Save to localStorage
+    document.documentElement.classList.toggle('dark', newDarkMode);
+  };
+
+  useEffect(() => {
+    // Retrieve dark mode setting from localStorage on component mount
+    const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
+    if (savedDarkMode) {
+      setDarkMode(savedDarkMode);
+      document.documentElement.classList.add('dark'); // Apply dark mode class if saved
+    }
+  }, []);
   useEffect(() => {
     const fetchBoards = async () => {
       const token = localStorage.getItem('token');
@@ -173,7 +183,7 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisibility={setDetailsVisibility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header toggleDarkMode={toggleDarkMode} />
-      <div className="pt-24">
+      <div className="pt-24 min-h-screen w-full dark:bg-gray-900 overflow-x-auto">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
           {(provided) => (
             <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>
