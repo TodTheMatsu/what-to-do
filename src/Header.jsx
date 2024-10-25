@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-function Header() {
+function Header({toggleDarkMode}) {
     const phrases = [
         "what",
         "What to do?",
@@ -102,7 +102,11 @@ function Header() {
                     Log out
                 </button>
             )}
-
+                <button 
+                    className='bg-gray-900 text-white p-2 rounded-full shadow-xl border-2 fixed top-7 right-44' 
+                    onClick={toggleDarkMode}>
+                    Toggle dark mode
+                </button>
         </header>
     );
 } 
