@@ -34,16 +34,16 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
   };
 
   return (
-    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2' : ''}`}>
+    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} dark:bg-gray-800`}>
       <Droppable droppableId={`Board-${boardId}`} type='group'>
         {(provided) => (
           
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 border-4 border-gray-300 bg-gray-200 shadow-2xl pt-10 px-3 rounded-lg relative"
+            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 border-4 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 shadow-2xl dark:shadow-gray-700/50 pt-10 px-3 rounded-lg relative"
           >
-            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 bg-gray-200  text-gray-900 font-bold  rounded-full top-0 right-0 absolute'>X</button>
+            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 dark:hover:bg-gray-700 bg-gray-200 dark:bg-gray-800  text-gray-900 dark:text-gray-100 font-bold  rounded-full top-0 right-0 absolute'>X</button>
             {tasks && tasks.map((task, index) => (
               <Draggable key={index} draggableId={`draggable-${boardId}-${index}`} index={index}>
                 {(provided, snapshot) => (
@@ -68,7 +68,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
             {provided.placeholder}
             <form onSubmit={handleSubmit} className="w-full">
               <input 
-                className='w-full h-[3vh] mb-2 mt-2 border-4 bg-transparent shadow-2xl pt-0.5 rounded-lg text-center font-bold hover:bg-gray-300 hover:placeholder-gray-500 focus:outline-dashed focus:outline-gray-400 focus:placeholder-transparent hover:font-extrabold' 
+                className='w-full h-[3vh] mb-2 mt-2 border-4 dark:border-gray-700 bg-transparent shadow-2xl dark:shadow-gray-700/50 pt-0.5 rounded-lg text-center font-bold hover:bg-gray-300 dark:hover:bg-gray-700 hover:placeholder-gray-500 focus:outline-dashed focus:outline-gray-400 focus:placeholder-transparent hover:font-extrabold dark:text-gray-100' 
                 placeholder='+ Add a task'
                 type="text"
                 value={taskText}
@@ -86,3 +86,5 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
 }
 
 export default TaskBoard;
+
+

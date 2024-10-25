@@ -47,7 +47,10 @@ const authenticate = (req, res, next) => {
 };
 
 app.post('/signup', async (req, res) => {
-  const { email, password } = req.body; 
+  let { email, password } = req.body;
+
+  // Convert email to lowercase
+  email = email.toLowerCase();
 
   try {
       // Check if the email already exists
@@ -58,7 +61,7 @@ app.post('/signup', async (req, res) => {
 
       const newUser = new User({ email, password });
       const savedUser = await newUser.save();
-      
+
       // Generate JWT
       const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
@@ -71,8 +74,8 @@ app.post('/signup', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
+  let { email, password } = req.body;
+  email = email.toLowerCase();
     try {
         const user = await User.findOne({ email });
         if (!user) {

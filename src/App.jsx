@@ -15,10 +15,25 @@ function App() {
       note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. You can press enter after typing in the task name in the input field to create a new task.',
     }],
   });
+  const [darkMode, setDarkMode] = useState(false);
   const [showDetails, setShowDetails] = useState({ show: false, taskObj: null });
   const [isDataFetched, setIsDataFetched] = useState(false); // Track if data has been fetched
   const [isSaving, setIsSaving] = useState(false); // Track if data is being saved
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode)); // Save to localStorage
+    document.documentElement.classList.toggle('dark', newDarkMode);
+  };
 
+  useEffect(() => {
+    // Retrieve dark mode setting from localStorage on component mount
+    const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
+    if (savedDarkMode) {
+      setDarkMode(savedDarkMode);
+      document.documentElement.classList.add('dark'); // Apply dark mode class if saved
+    }
+  }, []);
   useEffect(() => {
     const fetchBoards = async () => {
       const token = localStorage.getItem('token');
@@ -167,8 +182,8 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisibility={setDetailsVisibility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
-      <Header />
-      <div className="pt-24">
+      <Header toggleDarkMode={toggleDarkMode} />
+      <div className="pt-24 min-h-screen w-full dark:bg-gray-900 overflow-x-auto">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
           {(provided) => (
             <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>
