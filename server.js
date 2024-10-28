@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto'; // Import crypto
+
 dotenv.config();
 
 const app = express();
@@ -18,8 +20,9 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Define a simple schema and model
 const signupSchema = new mongoose.Schema({
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  salt: { type: String, required: true } // Store the salt
 });
 
 const boardSchema = new mongoose.Schema({
@@ -27,6 +30,7 @@ const boardSchema = new mongoose.Schema({
   boardOrder: { type: [Number], required: true },
   boardTasks: { type: Object, required: false }, // Store tasks as an object
 });
+
 const Board = mongoose.model('Board', boardSchema);
 const User = mongoose.model('User', signupSchema);
 
@@ -46,6 +50,19 @@ const authenticate = (req, res, next) => {
   }
 };
 
+// Function to hash password using scrypt
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hashedPassword = crypto.scryptSync(password, salt, 64).toString('hex');
+  return { salt, hashedPassword };
+};
+
+// Function to verify password
+const verifyPassword = (password, salt, hashedPassword) => {
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return hash === hashedPassword;
+};
+
 app.post('/signup', async (req, res) => {
   let { email, password } = req.body;
 
@@ -53,46 +70,50 @@ app.post('/signup', async (req, res) => {
   email = email.toLowerCase();
 
   try {
-      // Check if the email already exists
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-          return res.status(400).json({ error: 'Email already in use' });
-      }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
 
-      const newUser = new User({ email, password });
-      const savedUser = await newUser.save();
+    const { salt, hashedPassword } = hashPassword(password); // Hash password
 
-      // Generate JWT
-      const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const newUser = new User({ email, password: hashedPassword, salt }); // Store the salt
+    await newUser.save();
 
-      // Return user data and token
-      res.status(201).json({ user: savedUser, token });
+    // Generate JWT
+    const token = jwt.sign({ id: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(201).json({ user: newUser, token });
   } catch (error) {
-      console.error('Error saving user:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error saving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 app.post('/login', async (req, res) => {
   let { email, password } = req.body;
   email = email.toLowerCase();
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        if (user.password !== password) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        // Generate JWT
-        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        res.status(200).json({ message: 'Login successful', token });
-    } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ error: 'Internal server error' });
+  
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
+
+    // Verify the password using the stored salt and hashed password
+    const isMatch = verifyPassword(password, user.salt, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(200).json({ message: 'Login successful', token });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Route to save boards and tasks
@@ -101,16 +122,13 @@ app.post('/save-boards', authenticate, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Assuming you have a Board model that references the User model
     const existingBoard = await Board.findOne({ userId });
 
     if (existingBoard) {
-      // Update existing boards
       existingBoard.boardOrder = boardOrder;
       existingBoard.boardTasks = boardTasks;
       await existingBoard.save();
     } else {
-      // Create a new board entry
       const newBoard = new Board({
         userId,
         boardOrder,
@@ -125,6 +143,7 @@ app.post('/save-boards', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 // Route to retrieve boards and tasks
 app.get('/get-boards', authenticate, async (req, res) => {
   const userId = req.user.id;
@@ -155,7 +174,6 @@ app.get('/get-boards', authenticate, async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // Start the server
 app.listen(PORT, () => {
