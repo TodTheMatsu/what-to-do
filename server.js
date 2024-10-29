@@ -24,7 +24,13 @@ const signupSchema = new mongoose.Schema({
   password: { type: String, required: true },
   salt: { type: String, required: true } 
 });
+const generateAccessToken = (user) => {
+  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '15m' }); // Shorter expiration
+};
 
+const generateRefreshToken = (user) => {
+  return jwt.sign({ id: user._id, email: user.email }, process.env.REFRESH_SECRET, { expiresIn: '7d' }); // Longer expiration
+};
 const boardSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   boardOrder: { type: [Number], required: true },
@@ -73,56 +79,60 @@ const verifyPassword = (password, salt, hashedPassword) => {
 
 app.post('/signup', async (req, res) => {
   let { email, password } = req.body;
-
-  // Convert email to lowercase
   email = email.toLowerCase();
 
   try {
+    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
+    // Hash password
     const { salt, hashedPassword } = hashPassword(password);
-
     const newUser = new User({ email, password: hashedPassword, salt });
     await newUser.save();
 
-    // Generate JWT
-    const token = jwt.sign({ id: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // Generate tokens
+    const accessToken = generateAccessToken(newUser);
+    const refreshToken = generateRefreshToken(newUser);
 
-    res.status(201).json({ user: newUser, token });
+    // Send tokens and user data in response
+    res.status(201).json({ user: newUser, accessToken, refreshToken });
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error('Error during signup:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+
 app.post('/login', async (req, res) => {
   let { email, password } = req.body;
   email = email.toLowerCase();
-  
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Verify the password using the stored salt and hashed password
+    // Verify the password
     const isMatch = verifyPassword(password, user.salt, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate JWT
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // Generate tokens
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', accessToken, refreshToken });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Route to save boards and tasks
 app.post('/save-boards', authenticate, async (req, res) => {

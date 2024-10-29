@@ -28,5 +28,6 @@ The scalability of this project is no
    MONGODB_URI=<your mongodb URI>
    VITE_API_URL=http://localhost:5000
    JWT_SECRET=<put your JWT secret here>
+   REFRESH_SECRET=<put your refresh secret here>
    PORT=5000
    ```

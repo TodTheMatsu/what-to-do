@@ -32,7 +32,8 @@ function Login() {
             }
 
             const data = await response.json();
-            localStorage.setItem('token', data.token); // Store token securely
+            localStorage.setItem('token', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
             navigate('/what-to-do/'); // Redirect to dashboard on success
         } catch (error) {
             setError(error.message);
