@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto'; // Import crypto
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -22,20 +22,20 @@ mongoose.connect(process.env.MONGODB_URI)
 const signupSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  salt: { type: String, required: true } // Store the salt
+  salt: { type: String, required: true } 
 });
 
 const boardSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   boardOrder: { type: [Number], required: true },
-  boardTasks: { type: Object, required: false }, // Store tasks as an object
+  boardTasks: { type: Object, required: false },
 });
 
 const Board = mongoose.model('Board', boardSchema);
 const User = mongoose.model('User', signupSchema);
 
 const authenticate = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Assuming Bearer token
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     return res.status(403).json({ error: 'Access denied' });
@@ -43,12 +43,20 @@ const authenticate = (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified; // Attach user data to request
+    req.user = verified; 
     next();
   } catch (error) {
-    res.status(400).json({ error: 'Invalid token' });
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ error: 'Token expired' });
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(400).json({ error: 'Invalid token' });
+    } else {
+      console.error('JWT verification error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
+
 
 // Function to hash password using scrypt
 const hashPassword = (password) => {
@@ -75,9 +83,9 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
-    const { salt, hashedPassword } = hashPassword(password); // Hash password
+    const { salt, hashedPassword } = hashPassword(password);
 
-    const newUser = new User({ email, password: hashedPassword, salt }); // Store the salt
+    const newUser = new User({ email, password: hashedPassword, salt });
     await newUser.save();
 
     // Generate JWT
@@ -150,24 +158,23 @@ app.get('/get-boards', authenticate, async (req, res) => {
 
   try {
     const existingBoard = await Board.findOne({ userId });
-    console.log('Existing Board:', existingBoard); // Log the found board
+    console.log('Existing Board:', existingBoard); 
     if (existingBoard) {
       return res.status(200).json(existingBoard);
     } else {
-      // If no boards are found, create a new board for the user
       const newBoard = new Board({
         userId,
-        boardOrder: [1], // Initialize with an empty board order
+        boardOrder: [1], 
         boardTasks: {
           1: [{
             name: 'Click on me!',
             note: 'Welcome to your first ever task! This task is designed to help you get familiar with how our task management system works. You’ll be able to add new tasks, move them between boards, and delete them when completed. You can press enter after typing in the task name in the input field to create a new task.',
           }],
-        }, // Initialize with an empty board tasks object
+        }, 
       });
-      await newBoard.save(); // Save the new board to the database
-      console.log('New board created for user ID:', userId); // Log the creation of the new board
-      return res.status(201).json(newBoard); // Return the newly created board
+      await newBoard.save(); 
+      console.log('New board created for user ID:', userId); 
+      return res.status(201).json(newBoard);
     }
   } catch (error) {
     console.error('Error retrieving boards:', error);
