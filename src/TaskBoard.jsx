@@ -34,7 +34,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
   };
 
   return (
-    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} dark:bg-gray-800  bg-transparent`}>
+    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} dark:bg-gray-800  bg-transparent hover:outline hover:outline-1`}>
       <Droppable droppableId={`Board-${boardId}`} type='group'>
         {(provided) => (
           
@@ -68,7 +68,9 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
             {provided.placeholder}
             <form onSubmit={handleSubmit} className="w-full">
               <input 
-                className='w-full h-[3vh] mb-2 mt-2 border-4 dark:border-gray-700 bg-transparent shadow-2xl dark:shadow-gray-700/50 pt-0.5 rounded-lg text-center font-bold hover:bg-gray-300 dark:hover:bg-gray-700 hover:placeholder-gray-500 focus:outline-dashed focus:outline-gray-400 focus:placeholder-transparent hover:font-extrabold dark:text-gray-100' 
+                className='w-full h-[3vh] mb-2 mt-2 dark:border-gray-700 bg-transparent shadow-2xl
+                 dark:shadow-gray-700/50 pt-0.5 rounded-lg text-center  hover:bg-amber-50/50 dark:hover:bg-gray-700 hover:placeholder-gray-500
+                  focus:outline-dashed focus:outline-gray-400 focus:placeholder-transparent hover:font-bold dark:text-gray-100' 
                 placeholder='+ Add a task'
                 type="text"
                 value={taskText}
