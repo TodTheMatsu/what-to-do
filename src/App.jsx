@@ -211,7 +211,7 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisibility={setDetailsVisibility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
       <Header toggleDarkMode={toggleDarkMode} />
-      <div className="pt-24 min-h-screen w-full dark:bg-gray-900 overflow-x-auto">
+      <div className="pt-24 min-h-screen w-full dark:bg-gray-900 dark:bg-gradient-to-t dark:from-gray-900 dark:to-gray-700 bg-gradient-to-b from-gray-100 via-white to-gray-400 to-100% overflow-x-auto">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
           {(provided) => (
             <div className='flex' ref={provided.innerRef} {...provided.droppableProps}>

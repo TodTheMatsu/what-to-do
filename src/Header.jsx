@@ -74,7 +74,7 @@ function Header({toggleDarkMode}) {
 
 
     return (
-        <header className="bg-white shadow-lg dark:shadow-gray-700/50 min-h-24 fixed w-full z-10 dark:bg-gray-800">
+        <header className="bg-white shadow-lg dark:shadow-gray-700/50 min-h-24 bg-gradient-to-b from-gray-200 via-gray-100  to-gray-200 via-50% fixed w-full z-10 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:bg-gray-800">
             <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mr-2 outline-dashed rounded-2xl px-2 py-2">
                     {displayText}
@@ -97,13 +97,13 @@ function Header({toggleDarkMode}) {
             )}
             {isLoggedIn && ( // Render logout button only if user is logged in
                 <button 
-                    className='bg-red-500 text-white p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 right-4' 
+                    className='bg-red-500 text-white p-2 rounded-full shadow-xl dark:shadow-gray-700/50 dark:border-white border-black border-2 fixed top-7 right-4' 
                     onClick={handleLogout}>
                     Log out
                 </button>
             )}
                 <button 
-                    className='bg-gray-900 text-white dark:bg-gray-100 dark:text-black p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 left-4' 
+                    className='bg-gray-900 text-white dark:bg-gray-100 dark:text-black  p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 left-4 hover:bg-gray-800 dark:hover:bg-gray-200' 
                     onClick={toggleDarkMode}>
                     Toggle dark mode
                 </button>
