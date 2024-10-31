@@ -10,7 +10,7 @@ function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisibility }
                 <h1 className="text-3xl select-none truncate font-bold tracking-tight text-gray-900 dark:text-gray-100 text-center">{task.name}</h1>
             </div>
             <div onClick={deleteTask}
-                 className="bg-red-500 select-none hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full text-sm absolute -top-2 -right-2 border-2 border-red-700 dark:border-red-500 cursor-pointer">
+                 className="bg-red-500 select-none hover:bg-red-700 h-6 text-white py-1 px-2 rounded-full text-sm absolute -top-2 -right-2 border-red-700 dark:border-red-500 cursor-pointer">
                 X
             </div>
         </div>
