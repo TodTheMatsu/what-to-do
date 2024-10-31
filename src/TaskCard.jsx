@@ -1,7 +1,7 @@
 function TaskCard({ task, provided, snapshot, deleteTask, setDetailsVisibility }) {
     return (
         <div
-            className={`w-full z-0 h-20 my-2 ${snapshot.isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} bg-gray-100 dark:bg-gray-800 shadow-2xl border-2 border-gray-400 dark:border-gray-700 rounded-md flex items-center justify-center flex-col relative hover:border-gray-900 dark:hover:border-gray-700`}
+            className={`w-full z-0 h-20 my-2 ${snapshot.isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} bg-gray-50 dark:bg-gray-800 shadow-2xl border-2 border-gray-400 dark:border-gray-700 rounded-md flex items-center justify-center flex-col relative hover:border-gray-900 dark:hover:border-gray-700`}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
             ref={provided.innerRef}

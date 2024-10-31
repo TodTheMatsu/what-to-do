@@ -34,16 +34,16 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
   };
 
   return (
-    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} dark:bg-gray-800`}>
+    <div className={`rounded-lg ${isDragging ? 'animate-pulse outline-dashed outline-2 dark:outline-white' : ''} dark:bg-gray-800  bg-transparent`}>
       <Droppable droppableId={`Board-${boardId}`} type='group'>
         {(provided) => (
           
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 border-4 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 shadow-2xl dark:shadow-gray-700/50 pt-10 px-3 rounded-lg relative"
+            className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 dark:border-gray-700 bg-transparent dark:bg-gray-800 shadow-2xl dark:from-gray-700/50 pt-10 px-3 rounded-lg relative bg-gradient-to-t from-amber-100 to-100%"
           >
-            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 dark:hover:bg-gray-700 bg-gray-200 dark:bg-gray-800  text-gray-900 dark:text-gray-100 font-bold  rounded-full top-0 right-0 absolute'>X</button>
+            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 dark:hover:bg-gray-700 bg-transparent dark:bg-gray-800  text-gray-900 dark:text-gray-100 font-bold  rounded-full top-0 right-0 absolute'>X</button>
             {tasks && tasks.map((task, index) => (
               <Draggable key={index} draggableId={`draggable-${boardId}-${index}`} index={index}>
                 {(provided, snapshot) => (
