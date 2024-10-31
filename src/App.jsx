@@ -6,8 +6,34 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddButton from './AddButton.jsx';
 import Details from './Details.jsx';
 import axios from 'axios';
-
 function App() {
+  axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response && error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+                console.error('Refresh token not available, redirecting to login.');
+                return Promise.reject(error);
+            }
+            try {
+                const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/refresh-token`, {
+                    refreshToken,
+                });
+                localStorage.setItem('accessToken', data.accessToken);
+                originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+                return axios(originalRequest);
+            } catch (refreshError) {
+                console.error('Failed to refresh token:', refreshError);
+                return Promise.reject(refreshError);
+            }
+        }
+        return Promise.reject(error);
+    }
+);
   const [boardOrder, setBoardOrder] = useState([1]);
   const [boardTasks, setBoardTasks] = useState({
     1: [{
@@ -26,6 +52,8 @@ function App() {
     document.documentElement.classList.toggle('dark', newDarkMode);
   };
 
+
+  
   useEffect(() => {
     // Retrieve dark mode setting from localStorage on component mount
     const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));

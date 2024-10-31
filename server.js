@@ -25,7 +25,7 @@ const signupSchema = new mongoose.Schema({
   salt: { type: String, required: true } 
 });
 const generateAccessToken = (user) => {
-  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '15m' }); // Shorter expiration
+  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Shorter expiration
 };
 
 const generateRefreshToken = (user) => {
@@ -104,6 +104,7 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 app.post('/login', async (req, res) => {
@@ -191,7 +192,35 @@ app.get('/get-boards', authenticate, async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+// Refresh token endpoint
+app.post('/refresh-token', async (req, res) => {
+  const { refreshToken } = req.body;
 
+  if (!refreshToken) {
+    return res.status(400).json({ error: 'Refresh token is required' });
+  }
+
+  try {
+    // Verify the refresh token
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Generate a new access token
+    const newAccessToken = generateAccessToken(user);
+
+    res.status(200).json({ accessToken: newAccessToken });
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ error: 'Refresh token expired' });
+    }
+    return res.status(403).json({ error: 'Invalid refresh token' });
+  }
+});
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
