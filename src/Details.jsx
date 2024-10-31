@@ -34,15 +34,15 @@ function Details({ setDetailsVisibility, taskObj, updateTask }) {
                 {taskObj && (
                     <>
                         <input
-                            className="z-30 w-[500px] text-3xl font-bold tracking-tight bg-transparent text-gray-900 dark:text-gray-100 text-left mx-10 my-5 focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700"
+                            className="z-30 w-[500px] text-3xl font-bold tracking-tight bg-transparent text-gray-900 dark:text-gray-100 text-left mx-10 my-5 focus:outline-none focus:bg-sky-300 dark:focus:bg-gray-800 hover:bg-sky-100 dark:hover:bg-gray-600"
                             value={taskObj.name}
                             onChange={handleInputChange}
                             placeholder='Enter a task...'
                         />
-                        <div className="z-30 overflow-auto max-h-[85%] bg-slate-200 dark:bg-slate-800 rounded-sm mx-5 shadow-2xl dark:shadow-gray-700/50">
+                        <div className="z-30 overflow-auto max-h-[85%] bg-gray-50 dark:bg-slate-800 rounded-xl mx-5 shadow-2xl dark:shadow-gray-700/50">
                             <textarea
                                 ref={textareaRef}
-                                className="w-full p-5 focus:outline-none text-xl tracking-tight font-sans text-gray-900 dark:text-gray-100 bg-transparent resize-none"
+                                className="w-full p-5 focus:outline-none text-xl tracking-tight font-sans text-gray-900 dark:text-gray-100 bg-transparent resize-none "
                                 value={taskObj.note}
                                 onChange={handleTextareaChange}
                                 style={{ overflow: 'hidden' }}
