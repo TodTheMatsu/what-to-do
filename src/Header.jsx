@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoutImg from './assets/logout.png';
 function Header({toggleDarkMode}) {
     const phrases = [
         "what",
@@ -99,7 +100,7 @@ function Header({toggleDarkMode}) {
                 <button 
                     className='bg-red-500 text-white p-2 rounded-full shadow-xl dark:shadow-gray-700/50 dark:border-white border-black border-2 fixed top-7 right-4' 
                     onClick={handleLogout}>
-                    Log out
+                        <img src={logoutImg} alt="Logout"  className="w-6 h-6" />
                 </button>
             )}
                 <button 
