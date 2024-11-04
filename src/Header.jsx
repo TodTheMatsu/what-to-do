@@ -4,7 +4,7 @@ import logoutImg from './assets/logout.png';
 import darkModeImg from './assets/darkmode.png';
 import whiteModeImg from './assets/lightmode.png';
 
-function Header({toggleDarkMode}) {
+function Header({toggleDarkMode, darkMode}) {
     const phrases = [
         "what",
         "What to do?",
@@ -108,7 +108,7 @@ function Header({toggleDarkMode}) {
                 <button 
                     className='bg-gray-900 text-white dark:bg-sky-200 dark:text-black  p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 left-4 hover:bg-gray-800 dark:hover:bg-gray-200' 
                     onClick={toggleDarkMode}>
-                         <img src={darkModeImg} alt="dark mode"  className="w-6 h-6" />
+                         <img src={darkMode? whiteModeImg : darkModeImg} alt="dark mode"  className="w-6 h-6" />
                 </button>
         </header>
     );
