@@ -210,7 +210,7 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       {showDetails.show && <Details setDetailsVisibility={setDetailsVisibility} taskObj={showDetails.taskObj} updateTask={updateTask} />}
-      <Header toggleDarkMode={toggleDarkMode} />
+      <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode}/>
       <div className="pt-24 min-h-screen w-full dark:bg-gray-900 dark:bg-gradient-to-t dark:from-gray-700 dark:to-gray-900 bg-gradient-to-b from-sky-200 via-sky-100 to-gray-50 overflow-x-auto">
         <Droppable droppableId="board-container" direction="horizontal" type='board'>
           {(provided) => (

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoutImg from './assets/logout.png';
 import darkModeImg from './assets/darkmode.png';
-import whiteModeImg from './assets/whitemode.png';
+import whiteModeImg from './assets/lightmode.png';
+
 function Header({toggleDarkMode}) {
     const phrases = [
         "what",
@@ -34,7 +35,6 @@ function Header({toggleDarkMode}) {
     const [pauseDuration, setPauseDuration] = useState(2000);
     const [isBlinking, setIsBlinking] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
-
     useEffect(() => {
         const token = localStorage.getItem('token'); // Check for token in local storage
         setIsLoggedIn(!!token); // Set logged-in status based on token presence
