@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoutImg from './assets/logout.png';
+import darkModeImg from './assets/crescent-moon.png';
 function Header({toggleDarkMode}) {
     const phrases = [
         "what",
@@ -100,13 +101,13 @@ function Header({toggleDarkMode}) {
                 <button 
                     className='bg-red-500 text-white p-2 rounded-full shadow-xl dark:shadow-gray-700/50 dark:border-white border-black border-2 fixed top-7 right-4' 
                     onClick={handleLogout}>
-                        <img src={logoutImg} alt="Logout"  className="w-6 h-6" />
+                        <img src={logoutImg} alt="Logout"  className="w-6 h-6 fill-white" />
                 </button>
             )}
                 <button 
                     className='bg-gray-900 text-white dark:bg-gray-100 dark:text-black  p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 left-4 hover:bg-gray-800 dark:hover:bg-gray-200' 
                     onClick={toggleDarkMode}>
-                    Toggle dark mode
+                         <img src={logoutImg} alt="Logout"  className="w-6 h-6 fill-white" />
                 </button>
         </header>
     );
