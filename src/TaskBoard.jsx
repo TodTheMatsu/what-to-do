@@ -43,7 +43,7 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
             {...provided.droppableProps}
             className="w-60 min-h-[5vh] flex-grow-0 h-min mt-5 dark:border-gray-700 bg-transparent shadow-2xl dark:from-gray-700/50 pt-10 px-3 rounded-lg relative bg-gradient-to-t from-amber-100 to-100%"
           >
-            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] hover:bg-gray-400 dark:hover:bg-gray-700 bg-transparent dark:bg-gray-800  text-gray-900 dark:text-gray-100 font-bold  rounded-full top-0 right-0 absolute'>X</button>
+            <button onClick={() => deleteBoard(boardId)} className='w-6 h-[2vh] bg-transparent dark:bg-gray-800  text-gray-900 dark:text-gray-100 font-bold  rounded-full top-0 right-0 absolute'>X</button>
             {tasks && tasks.map((task, index) => (
               <Draggable key={index} draggableId={`draggable-${boardId}-${index}`} index={index}>
                 {(provided, snapshot) => (
