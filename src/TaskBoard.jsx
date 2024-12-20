@@ -23,8 +23,6 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
     };
 
     const updatedBoardTasks = [...boards[boardId], newTask];
-
-    // Update the boardTasks state with the new task for board 1
     setTasks({
       ...boards,
       [boardId]: updatedBoardTasks

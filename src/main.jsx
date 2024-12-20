@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Signup from './Signup.jsx'
-import Login from './login.jsx'
+import Login from './Login.jsx'
 const router = createBrowserRouter([
   {
     path: '/what-to-do',
