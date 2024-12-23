@@ -7,10 +7,10 @@ function Login() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     useEffect(() => {
-        // Retrieve dark mode setting from localStorage on component mount
+
         const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
         if (savedDarkMode) {
-          document.documentElement.classList.add('dark'); // Apply dark mode class if saved
+          document.documentElement.classList.add('dark'); 
         }
       }, []);
     const handleSubmit = async (e) => {
@@ -34,7 +34,7 @@ function Login() {
             const data = await response.json();
             localStorage.setItem('token', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
-            navigate('/what-to-do/'); // Redirect to dashboard on success
+            navigate('/what-to-do/');
         } catch (error) {
             setError(error.message);
             console.error('Error during login:', error);

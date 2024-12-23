@@ -8,7 +8,6 @@ function Signup() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
-        // Retrieve dark mode setting from localStorage on component mount
         const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
         if (savedDarkMode) {
           document.documentElement.classList.add('dark'); // Apply dark mode class if saved
@@ -18,15 +17,11 @@ function Signup() {
         e.preventDefault();
         setLoading(true);
         setError('');
-
-        // Simple email validation
         if (!/\S+@\S+\.\S+/.test(email)) {
             setError('Please enter a valid email address.');
             setLoading(false);
             return;
         }
-
-        // Simple password validation
         if (password.length < 6) {
             setError('Password must be at least 6 characters long.');
             setLoading(false);
@@ -51,9 +46,9 @@ function Signup() {
             console.log('Signup successful:', data);
             localStorage.setItem('token', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
-            setEmail(''); // Reset email field
-            setPassword(''); // Reset password field
-            navigate('/what-to-do/'); // Redirect to dashboard or another route
+            setEmail(''); 
+            setPassword(''); 
+            navigate('/what-to-do/'); 
         } catch (error) {
             setError(error.message);
             console.error('Error during signup:', error);
@@ -89,7 +84,7 @@ function Signup() {
                         disabled={loading}
                     >
                         {loading ? (
-                            <span>Signing up...</span> // You could replace this with a spinner
+                            <span>Signing up...</span> 
                         ) : 'Sign up'}
                     </button>
                 </form>

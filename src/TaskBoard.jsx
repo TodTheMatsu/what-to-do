@@ -16,7 +16,6 @@ function TaskBoard({ tasks, boardId, deleteTask, setDetailsVisibility, setTasks,
     e.preventDefault();
     if (!taskText) return;
 
-    // Create a new task object
     const newTask = {
       name: taskText,
       note: "",

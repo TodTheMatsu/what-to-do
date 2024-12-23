@@ -43,29 +43,29 @@ function App() {
   });
   const [darkMode, setDarkMode] = useState(false);
   const [showDetails, setShowDetails] = useState({ show: false, taskObj: null });
-  const [isDataFetched, setIsDataFetched] = useState(false); // Track if data has been fetched
-  const [isSaving, setIsSaving] = useState(false); // Track if data is being saved
+  const [isDataFetched, setIsDataFetched] = useState(false); 
+  const [isSaving, setIsSaving] = useState(false); 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', JSON.stringify(newDarkMode)); // Save to localStorage
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode)); 
     document.documentElement.classList.toggle('dark', newDarkMode);
   };
 
 
   
   useEffect(() => {
-    // Retrieve dark mode setting from localStorage on component mount
+  
     const savedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
     if (savedDarkMode) {
       setDarkMode(savedDarkMode);
-      document.documentElement.classList.add('dark'); // Apply dark mode class if saved
+      document.documentElement.classList.add('dark'); 
     }
   }, []);
   useEffect(() => {
     const fetchBoards = async () => {
       const token = localStorage.getItem('token');
-      if (!token) return; // Return early if not logged in
+      if (!token) return;
 
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get-boards`, {
@@ -74,7 +74,7 @@ function App() {
         if (response.data) {
           setBoardOrder(response.data.boardOrder);
           setBoardTasks(response.data.boardTasks);
-          setIsDataFetched(true); // Set flag to indicate data has been fetched
+          setIsDataFetched(true);
         }
       } catch (error) {
         console.error('Error fetching boards:', error);
@@ -85,12 +85,12 @@ function App() {
   }, []);
 
   const saveBoards = async () => {
-    if (isSaving || !isDataFetched) return; // Prevent saving if already saving or data not fetched
+    if (isSaving || !isDataFetched) return;
 
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    setIsSaving(true); // Set saving flag
+    setIsSaving(true);
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/save-boards`, {
         boardOrder,
@@ -101,13 +101,13 @@ function App() {
     } catch (error) {
       console.error('Error saving boards:', error);
     } finally {
-      setIsSaving(false); // Reset saving flag
+      setIsSaving(false);
     }
   };
 
   useEffect(() => {
     if (isDataFetched) {
-      saveBoards(); // Call save only if data has been fetched
+      saveBoards();
     }
   }, [boardOrder, boardTasks, isDataFetched]);
 

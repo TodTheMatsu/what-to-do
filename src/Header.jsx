@@ -34,10 +34,10 @@ function Header({toggleDarkMode, darkMode}) {
     const [typingSpeed, setTypingSpeed] = useState(200);
     const [pauseDuration, setPauseDuration] = useState(2000);
     const [isBlinking, setIsBlinking] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
+    const [isLoggedIn, setIsLoggedIn] = useState(false); 
     useEffect(() => {
-        const token = localStorage.getItem('token'); // Check for token in local storage
-        setIsLoggedIn(!!token); // Set logged-in status based on token presence
+        const token = localStorage.getItem('token'); 
+        setIsLoggedIn(!!token); 
     }, []);
 
     useEffect(() => {
@@ -84,7 +84,7 @@ function Header({toggleDarkMode, darkMode}) {
                     <span className={`cursor ${isBlinking ? 'blinking' : ''}`}>|</span>
                 </h1>
             </div>
-            {!isLoggedIn && ( // Render buttons only if user is not logged in
+            {!isLoggedIn && ( 
                 <>
                     <button 
                         className='bg-gray-100 dark:bg-gray-800 dark:text-white text-black p-2 rounded-full shadow-xl dark:shadow-gray-700/50 border-2 fixed top-7 right-4'
@@ -98,7 +98,7 @@ function Header({toggleDarkMode, darkMode}) {
                     </button>
                 </>
             )}
-            {isLoggedIn && ( // Render logout button only if user is logged in
+            {isLoggedIn && ( 
                 <button 
                     className='bg-red-500 text-white p-2 rounded-full shadow-xl dark:shadow-gray-700/50 dark:border-white border-black border-2 fixed top-7 right-4' 
                     onClick={handleLogout}>
