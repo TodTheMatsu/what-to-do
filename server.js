@@ -13,12 +13,12 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-// MongoDB connection
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Define a simple schema and model
+
 const signupSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -64,14 +64,13 @@ const authenticate = (req, res, next) => {
 };
 
 
-// Function to hash password using scrypt
 const hashPassword = (password) => {
   const salt = crypto.randomBytes(16).toString('hex');
   const hashedPassword = crypto.scryptSync(password, salt, 64).toString('hex');
   return { salt, hashedPassword };
 };
 
-// Function to verify password
+
 const verifyPassword = (password, salt, hashedPassword) => {
   const hash = crypto.scryptSync(password, salt, 64).toString('hex');
   return hash === hashedPassword;
@@ -82,22 +81,21 @@ app.post('/signup', async (req, res) => {
   email = email.toLowerCase();
 
   try {
-    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
-    // Hash password
+
     const { salt, hashedPassword } = hashPassword(password);
     const newUser = new User({ email, password: hashedPassword, salt });
     await newUser.save();
 
-    // Generate tokens
+
     const accessToken = generateAccessToken(newUser);
     const refreshToken = generateRefreshToken(newUser);
 
-    // Send tokens and user data in response
+   
     res.status(201).json({ user: newUser, accessToken, refreshToken });
   } catch (error) {
     console.error('Error during signup:', error);
@@ -117,13 +115,12 @@ app.post('/login', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Verify the password
     const isMatch = verifyPassword(password, user.salt, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate tokens
+
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
@@ -135,7 +132,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-// Route to save boards and tasks
 app.post('/save-boards', authenticate, async (req, res) => {
   const { boardOrder, boardTasks } = req.body;
   const userId = req.user.id;
@@ -163,7 +159,7 @@ app.post('/save-boards', authenticate, async (req, res) => {
   }
 });
 
-// Route to retrieve boards and tasks
+
 app.get('/get-boards', authenticate, async (req, res) => {
   const userId = req.user.id;
 
@@ -192,7 +188,7 @@ app.get('/get-boards', authenticate, async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-// Refresh token endpoint
+
 app.post('/refresh-token', async (req, res) => {
   const { refreshToken } = req.body;
 
@@ -201,7 +197,6 @@ app.post('/refresh-token', async (req, res) => {
   }
 
   try {
-    // Verify the refresh token
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
     const user = await User.findById(decoded.id);
 
@@ -209,7 +204,6 @@ app.post('/refresh-token', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Generate a new access token
     const newAccessToken = generateAccessToken(user);
 
     res.status(200).json({ accessToken: newAccessToken });
@@ -221,7 +215,7 @@ app.post('/refresh-token', async (req, res) => {
     return res.status(403).json({ error: 'Invalid refresh token' });
   }
 });
-// Start the server
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
